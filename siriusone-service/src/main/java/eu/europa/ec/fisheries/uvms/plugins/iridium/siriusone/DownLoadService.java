@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementSourceType;
 import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementTypeType;
 import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.uvms.exchange.model.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.service.ExchangeService;
 import static eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.SiriusOneMessage.LOG;
@@ -160,7 +161,7 @@ public class DownLoadService {
         mp.setLongitude(msg.getLongitude());
         movement.setPosition(mp);
 
-        movement.setPositionTime(msg.getDateTime());
+        movement.setPositionTime(DateUtils.parseTimestamp(msg.getDateTime()));
 
         movement.setReportedCourse(msg.getCourse());
 
@@ -177,7 +178,7 @@ public class DownLoadService {
         reportType.setPluginName(startUp.getRegisterClassName() + "." + startUp.getApplicaionName());
 
         GregorianCalendar gcal = (GregorianCalendar) GregorianCalendar.getInstance();
-        reportType.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal));
+        reportType.setTimestamp(gcal.getTime());
 
         reportType.setPluginType(PluginType.SATELLITE_RECEIVER);
 
