@@ -105,7 +105,7 @@ public class DownLoadService {
 
         for (Message message : mails) {
             Multipart multipart = (Multipart) message.getContent();
-            // System.out.println(multipart.getCount());
+            // //System.out.println(multipart.getCount());
 
             for (int i = 0; i < multipart.getCount(); i++) {
                 BodyPart bodyPart = multipart.getBodyPart(i);
