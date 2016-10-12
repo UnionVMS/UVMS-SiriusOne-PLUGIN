@@ -37,7 +37,9 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.service.PluginService;
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = ExchangeModelConstants.CONNECTION_TYPE),
     @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "Durable"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = ExchangeModelConstants.DESTINATION_TYPE_TOPIC),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = ExchangeModelConstants.EVENTBUS_NAME)
+    @ActivationConfigProperty(propertyName = "destination", propertyValue = ExchangeModelConstants.EVENTBUS_NAME),
+    @ActivationConfigProperty(propertyName = "destinationJndiName", propertyValue = ExchangeModelConstants.NO_PREFIX_PLUGIN_EVENTBUS),
+    @ActivationConfigProperty(propertyName = "connectionFactoryJndiName", propertyValue = ExchangeModelConstants.NO_PREFIX_CONNECTION_FACTORY)
 })
 public class PluginAckEventBusListener implements MessageListener {
 
@@ -45,9 +47,6 @@ public class PluginAckEventBusListener implements MessageListener {
 
     @EJB
     StartupBean startupService;
-
-    @EJB
-    PluginService siriusoneService;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -65,7 +64,6 @@ public class PluginAckEventBusListener implements MessageListener {
                 PluginFault fault = JAXBMarshaller.unmarshallTextMessage(textMessage, PluginFault.class);
                 handlePluginFault(fault);
             } else {
-                String responseMessage = null;
                 switch (request.getMethod()) {
                     case REGISTER_SERVICE:
                         RegisterServiceResponse registerResponse = JAXBMarshaller.unmarshallTextMessage(textMessage, RegisterServiceResponse.class);
