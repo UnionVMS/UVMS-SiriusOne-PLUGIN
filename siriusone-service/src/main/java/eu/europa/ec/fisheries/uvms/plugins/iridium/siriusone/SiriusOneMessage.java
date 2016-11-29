@@ -28,7 +28,7 @@ public class SiriusOneMessage {
     private long msgSequenseNo;
     private BoolType normalReport;
     private BoolType gpsValid;
-    private int time;
+    int time;
     private LonHemispherType lonHemis;
     private LatHemispherType latHemis;
     private double longitude;
@@ -93,7 +93,7 @@ public class SiriusOneMessage {
         return true;
     }
 
-    private void parse(byte[] msg) {
+    void parse(byte[] msg) {
         StringBuffer buff = new StringBuffer();
         for (int i = 0; i < msg.length; i++) {
             int num = Integer.parseInt(String.format("%02X ", msg[i]).trim(), 16);
@@ -130,7 +130,7 @@ public class SiriusOneMessage {
         }
     }
 
-    private void setTime(String strMsg) {
+    void setTime(String strMsg) {
         time = Integer.parseInt(strMsg.substring(2, 25), 2);
     }
 
