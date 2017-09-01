@@ -11,27 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone;
 
-import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdList;
-import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdType;
-import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.MobileTerminalId;
-import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementBaseType;
-import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementComChannelType;
-import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementPoint;
-import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementSourceType;
-import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementTypeType;
-import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
-import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.uvms.exchange.model.util.DateUtils;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.service.ExchangeService;
-import static eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.SiriusOneMessage.LOG;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Future;
+
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
 import javax.ejb.DependsOn;
@@ -50,9 +35,23 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.search.FlagTerm;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdList;
+import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdType;
+import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.MobileTerminalId;
+import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementBaseType;
+import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementComChannelType;
+import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementPoint;
+import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementSourceType;
+import eu.europa.ec.fisheries.schema.exchange.movement.v1.MovementTypeType;
+import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
+import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.uvms.exchange.model.util.DateUtils;
+import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
+import eu.europa.ec.fisheries.uvms.plugins.iridium.service.ExchangeService;
 
 /**
  **/

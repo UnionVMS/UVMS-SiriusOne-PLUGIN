@@ -12,14 +12,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone;
 
 import java.util.concurrent.Future;
+
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
-import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 
 /***/
 @Singleton
