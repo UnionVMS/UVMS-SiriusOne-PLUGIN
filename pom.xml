@@ -10,7 +10,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.plugins.iridium</groupId>
     <artifactId>siriusone</artifactId>
-    <version>3.0.7-SNAPSHOT</version>
+    <version>3.0.7</version>
     <packaging>pom</packaging>
     <description>Plugin template</description>
     
@@ -59,7 +59,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-SiriusOne-PLUGIN.git</connection>
-      <tag>HEAD</tag>
+      <tag>siriusone-3.0.7</tag>
   </scm>
            
     <modules>
