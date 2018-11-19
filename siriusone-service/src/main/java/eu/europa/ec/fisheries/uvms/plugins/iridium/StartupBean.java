@@ -39,7 +39,7 @@ public class StartupBean extends PluginDataHolder {
 
     private static final Logger LOG = LoggerFactory.getLogger(StartupBean.class);
 
-    private static final int MAX_NUMBER_OF_TRIES = 20;
+    private static final int MAX_NUMBER_OF_TRIES = 5;
     private boolean isRegistered = false;
     private boolean isEnabled = false;
     private boolean waitingForResponse = false;
