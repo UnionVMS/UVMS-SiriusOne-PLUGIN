@@ -59,12 +59,12 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.service.ExchangeService;
 @DependsOn({"StartupBean"})
 public class DownLoadService {
 
-    final static Logger LOG = LoggerFactory.getLogger(DownLoadService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DownLoadService.class);
     @EJB
-    StartupBean startUp;
+    private StartupBean startUp;
 
     @EJB
-    ExchangeService service;
+    private ExchangeService service;
 
     @Asynchronous
     public Future<String> download() {

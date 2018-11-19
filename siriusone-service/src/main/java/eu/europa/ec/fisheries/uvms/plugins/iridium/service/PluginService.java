@@ -38,9 +38,9 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 public class PluginService {
 
     @EJB
-    StartupBean startupBean;
+    private StartupBean startupBean;
 
-    final static Logger LOG = LoggerFactory.getLogger(PluginService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginService.class);
 
     /**
      * TODO implement

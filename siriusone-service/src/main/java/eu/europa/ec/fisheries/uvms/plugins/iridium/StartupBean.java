@@ -15,13 +15,10 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.EJB;
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.Timer;
-import javax.jms.JMSException;
+import javax.ejb.*;
 
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.plugins.iridium.producer.PluginToEventBusTopicProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,16 +30,16 @@ import eu.europa.ec.fisheries.uvms.exchange.model.constant.ExchangeModelConstant
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.mapper.ServiceMapper;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.producer.PluginMessageProducer;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.service.FileHandlerBean;
 
 @Singleton
 @Startup
+@DependsOn("PluginToEventBusTopicProducer")
 public class StartupBean extends PluginDataHolder {
 
-    final static Logger LOG = LoggerFactory.getLogger(StartupBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StartupBean.class);
 
-    private final static int MAX_NUMBER_OF_TRIES = 20;
+    private static final int MAX_NUMBER_OF_TRIES = 20;
     private boolean isRegistered = false;
     private boolean isEnabled = false;
     private boolean waitingForResponse = false;
@@ -53,10 +50,10 @@ public class StartupBean extends PluginDataHolder {
     private String RESPONSE_TOPIC_NAME = "";
 
     @EJB
-    PluginMessageProducer messageProducer;
+    private PluginToEventBusTopicProducer messageProducer;
 
     @EJB
-    FileHandlerBean fileHandler;
+    private FileHandlerBean fileHandler;
 
     private CapabilityListType capabilities;
     private SettingListType settingList;
@@ -125,7 +122,7 @@ public class StartupBean extends PluginDataHolder {
         try {
             String registerServiceRequest = ExchangeModuleRequestMapper.createRegisterServiceRequest(serviceType, capabilities, settingList);
             String correlationId = messageProducer.sendEventBusMessage(registerServiceRequest, ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE);
-        } catch (JMSException | ExchangeModelMarshallException e) {
+        } catch (ExchangeModelMarshallException | MessageException e) {
             LOG.error("Failed to send registration message to {}", ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE);
             setWaitingForResponse(false);
         }
@@ -137,7 +134,7 @@ public class StartupBean extends PluginDataHolder {
         try {
             String unregisterServiceRequest = ExchangeModuleRequestMapper.createUnregisterServiceRequest(serviceType);
             String correlationId = messageProducer.sendEventBusMessage(unregisterServiceRequest, ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE);
-        } catch (JMSException | ExchangeModelMarshallException e) {
+        } catch (ExchangeModelMarshallException | MessageException e) {
             LOG.error("Failed to send unregistration message to {}", ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE);
         }
     }

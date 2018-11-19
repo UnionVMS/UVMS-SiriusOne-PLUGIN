@@ -31,7 +31,7 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.SettingType;
  **/
 public class ServiceMapper {
 
-    final static Logger LOG = LoggerFactory.getLogger(ServiceMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceMapper.class);
 
     public static ServiceType getServiceType(String serviceClassName, String siriusoneDisplayName, String description, PluginType siriusoneType, String responseMessageName, String satelliteType) {
 
@@ -55,9 +55,7 @@ public class ServiceMapper {
 
     public static SettingListType getSettingsListTypeFromMap(ConcurrentHashMap<String, String> settings) {
         SettingListType settingListType = new SettingListType();
-        Iterator<Map.Entry<String, String>> itr = settings.entrySet().iterator();
-        while (itr.hasNext()) {
-            Map.Entry<String, String> tmp = itr.next();
+        for (Map.Entry<String, String> tmp : settings.entrySet()) {
             SettingType setting = new SettingType();
             setting.setKey(tmp.getKey());
             setting.setValue(tmp.getValue());
@@ -68,9 +66,7 @@ public class ServiceMapper {
 
     public static CapabilityListType getCapabilitiesListTypeFromMap(ConcurrentHashMap<String, String> capabilities) {
         CapabilityListType capabilityListType = new CapabilityListType();
-        Iterator<Map.Entry<String, String>> itr = capabilities.entrySet().iterator();
-        while (itr.hasNext()) {
-            Map.Entry<String, String> tmp = itr.next();
+        for (Map.Entry<String, String> tmp : capabilities.entrySet()) {
             CapabilityType setting = new CapabilityType();
 
             try {

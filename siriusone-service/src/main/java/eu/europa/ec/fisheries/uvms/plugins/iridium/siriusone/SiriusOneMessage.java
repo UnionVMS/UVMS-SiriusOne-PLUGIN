@@ -40,7 +40,7 @@ public class SiriusOneMessage {
     private byte[] msg;
     private String strMsg;
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
-    final static Logger LOG = LoggerFactory.getLogger(SiriusOneMessage.class);
+    static final Logger LOG = LoggerFactory.getLogger(SiriusOneMessage.class);
 
     public enum BoolType {
 

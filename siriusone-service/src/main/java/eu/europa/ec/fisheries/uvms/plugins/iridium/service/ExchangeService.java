@@ -16,8 +16,9 @@ import java.util.UUID;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.jms.JMSException;
 
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.plugins.iridium.producer.PluginToExchangeProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,6 @@ import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.constants.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.producer.PluginMessageProducer;
 
 /**
  **/
@@ -34,22 +33,22 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.producer.PluginMessageProduce
 @Stateless
 public class ExchangeService {
 
-    final static Logger LOG = LoggerFactory.getLogger(ExchangeService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExchangeService.class);
 
     @EJB
-    StartupBean startupBean;
+    private StartupBean startupBean;
 
     @EJB
-    PluginMessageProducer producer;
+    private PluginToExchangeProducer producer;
 
     public void sendMovementReportToExchange(SetReportMovementType reportType) {
         try {
             String text = ExchangeModuleRequestMapper.createSetMovementReportRequest(reportType, "SIRIUSONE");
-            String messageId = producer.sendModuleMessage(text, ModuleQueue.EXCHANGE);
+            String messageId = producer.sendModuleMessage(text, null);
             startupBean.getCachedMovement().put(messageId, reportType);
         } catch (ExchangeModelMarshallException e) {
             LOG.error("Couldn't map movement to setreportmovementtype");
-        } catch (JMSException e) {
+        } catch (MessageException e) {
             LOG.error("couldn't send movement");
             startupBean.getCachedMovement().put(UUID.randomUUID().toString(), reportType);
         }

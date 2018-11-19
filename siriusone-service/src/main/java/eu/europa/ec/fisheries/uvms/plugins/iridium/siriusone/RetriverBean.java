@@ -27,14 +27,16 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 @Singleton
 @Startup
 public class RetriverBean {
-    final static Logger LOG = LoggerFactory.getLogger(RetriverBean.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(RetriverBean.class);
+
     private Future connectFuture = null;
 
     @EJB
-    DownLoadService downloadService;
+    private DownLoadService downloadService;
 
     @EJB
-    StartupBean startupBean;
+    private StartupBean startupBean;
 
     @Schedule(minute = "*/1", hour = "*", persistent = false)
     public void download() {
