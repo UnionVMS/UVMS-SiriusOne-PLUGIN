@@ -18,11 +18,11 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jms.JMSException;
 
+import eu.europa.ec.fisheries.schema.exchange.module.v1.ExchangeModuleMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
-import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.constants.ModuleQueue;
@@ -45,9 +45,9 @@ public class ExchangeService {
     public void sendMovementReportToExchange(SetReportMovementType reportType) {
         try {
             String text = ExchangeModuleRequestMapper.createSetMovementReportRequest(reportType, "SIRIUSONE");
-            String messageId = producer.sendModuleMessage(text, ModuleQueue.EXCHANGE);
+            String messageId = producer.sendModuleMessage(text, ModuleQueue.EXCHANGE, ExchangeModuleMethod.SET_MOVEMENT_REPORT.value());
             startupBean.getCachedMovement().put(messageId, reportType);
-        } catch (ExchangeModelMarshallException e) {
+        } catch (RuntimeException e) {
             LOG.error("Couldn't map movement to setreportmovementtype");
         } catch (JMSException e) {
             LOG.error("couldn't send movement");

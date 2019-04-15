@@ -126,7 +126,7 @@ public class DownLoadService {
                             try {
                                 msgToQue(mes);
                                 message.setFlag(Flag.SEEN, true);
-                            } catch (DatatypeConfigurationException dce) {
+                            } catch (Exception dce) {
                                 message.setFlag(Flag.SEEN, false);
                             }
                         }
@@ -137,7 +137,7 @@ public class DownLoadService {
 
     }
 
-    private void msgToQue(SiriusOneMessage msg) throws DatatypeConfigurationException {
+    private void msgToQue(SiriusOneMessage msg) {
 
         MovementBaseType movement = new MovementBaseType();
         //movement.setActivity(null);
@@ -160,7 +160,7 @@ public class DownLoadService {
         mp.setLongitude(msg.getLongitude());
         movement.setPosition(mp);
 
-        movement.setPositionTime(DateUtils.parseTimestamp(msg.getDateTime()));
+        movement.setPositionTime(msg.getDateTime().toGregorianCalendar().getTime());
 
         movement.setReportedCourse(msg.getCourse());
 
