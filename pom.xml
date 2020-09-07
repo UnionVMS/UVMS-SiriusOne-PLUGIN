@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -11,7 +9,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.plugins.iridium</groupId>
     <artifactId>siriusone</artifactId>
-    <version>3.0.9-SNAPSHOT</version>
+    <version>3.0.9</version>
     <packaging>war</packaging>
     <description>SiriusOne Plugin</description>
 
@@ -55,7 +53,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-SiriusOne-PLUGIN.git</connection>
-        <tag>HEAD</tag>
+        <tag>siriusone-3.0.9</tag>
     </scm>
 
     <build>
