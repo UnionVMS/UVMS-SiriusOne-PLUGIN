@@ -16,13 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
 
-/**
- **/
 public abstract class PluginDataHolder {
 
-    public final static String PLUGIN_PROPERTIES = "siriusone.properties";
-    public final static String PROPERTIES = "settings.properties";
-    public final static String CAPABILITIES = "capabilities.properties";
+    public static final String PLUGIN_PROPERTIES = "plugin.properties";
+    public static final String PROPERTIES = "settings.properties";
+    public static final String CAPABILITIES = "capabilities.properties";
 
     private Properties siriusoneApplicaitonProperties;
     private Properties siriusoneProperties;

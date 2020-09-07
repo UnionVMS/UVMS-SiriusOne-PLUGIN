@@ -11,10 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.producer;
 
-import static eu.europa.ec.fisheries.uvms.plugins.iridium.constants.ModuleQueue.EXCHANGE;
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
@@ -28,12 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.exchange.model.constant.ExchangeModelConstants;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.constants.ModuleQueue;
 
-@Singleton
+@ApplicationScoped
 public class PluginMessageProducer {
 
-    final static Logger LOG = LoggerFactory.getLogger(PluginMessageProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginMessageProducer.class);
 
     @Resource(mappedName = "java:/" + ExchangeModelConstants.EXCHANGE_MESSAGE_IN_QUEUE)
     private Queue exchangeQueue;
@@ -44,10 +41,6 @@ public class PluginMessageProducer {
 
     @Resource(mappedName = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
-
-    @PostConstruct
-    public void resourceLookup() {
-    }
 
     public void sendResponseMessage(String text, TextMessage requestMessage) throws JMSException {
         try (Connection connection = connectionFactory.createConnection();
@@ -64,7 +57,7 @@ public class PluginMessageProducer {
         }
     }
 
-    public String sendModuleMessage(String text, ModuleQueue queue, String function) throws JMSException {
+    public String sendMessageToExchange(String text, String function) throws JMSException {
         try (Connection connection = connectionFactory.createConnection();
              Session session = connection.createSession(false, 1);
              MessageProducer producer = session.createProducer(exchangeQueue);
@@ -74,15 +67,10 @@ public class PluginMessageProducer {
             message.setText(text);
             message.setStringProperty(MessageConstants.JMS_FUNCTION_PROPERTY, function);
 
-            if (EXCHANGE == queue) {
-                producer.setDeliveryMode(DeliveryMode.PERSISTENT);
-                producer.send(message);
-
-            } else {
-                LOG.error("[ Sending Queue is not implemented ]");
-            }
-
-            LOG.debug("SendMessage-queue:{}, message:{}", queue, message);
+            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+            producer.send(message);
+                
+            LOG.debug("SendMessage-queue:{}, message:{}", message);
             return message.getJMSMessageID();
 
         } catch (JMSException e) {

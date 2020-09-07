@@ -9,35 +9,24 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.plugins.iridium.service;
+package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Positions {
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+    private List<Position> position;
 
-/**
- **/
-@Startup
-@Singleton
-public class FileHandlerBean {
-
-    private static final Logger LOG = LoggerFactory.getLogger(FileHandlerBean.class);
-
-    public Properties getPropertiesFromFile(String fileName) {
-        Properties props = new Properties();
-        try {
-            InputStream inputStream = FileHandlerBean.class.getClassLoader().getResourceAsStream(fileName);
-            props.load(inputStream);
-        } catch (IOException e) {
-            LOG.debug("Properties file failed to load");
-        }
-        return props;
+    public List<Position> getPosition() {
+        return position;
     }
 
+    public void setPosition(List<Position> position) {
+        this.position = position;
+    }
 }

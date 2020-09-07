@@ -27,11 +27,11 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.SettingListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.SettingType;
 
-/**
- **/
 public class ServiceMapper {
+    
+    private ServiceMapper() {}
 
-    final static Logger LOG = LoggerFactory.getLogger(ServiceMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceMapper.class);
 
     public static ServiceType getServiceType(String serviceClassName, String siriusoneDisplayName, String description, PluginType siriusoneType, String responseMessageName, String satelliteType) {
 

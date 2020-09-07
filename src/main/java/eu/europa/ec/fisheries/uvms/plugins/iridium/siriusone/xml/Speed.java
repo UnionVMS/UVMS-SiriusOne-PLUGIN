@@ -9,13 +9,29 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.plugins.iridium.exception;
+package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.xml;
 
-public class PluginException extends Exception {
-    private static final long serialVersionUID = 1L;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    public PluginException(String message) {
-        super(message);
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Speed {
+
+    private Double knots;
+    private Double km;
+ 
+    public Double getKnots() {
+        return knots;
     }
-
+    public void setKnots(Double knots) {
+        this.knots = knots;
+    }
+    public Double getKm() {
+        return km;
+    }
+    public void setKm(Double km) {
+        this.km = km;
+    }
 }

@@ -9,10 +9,24 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.plugins.iridium.constants;
+package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.xml;
 
-public enum ModuleQueue {
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    EXCHANGE;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Devices {
 
+    private List<Device> device;
+
+    public List<Device> getDevice() {
+        return device;
+    }
+
+    public void setDevice(List<Device> device) {
+        this.device = device;
+    }
 }

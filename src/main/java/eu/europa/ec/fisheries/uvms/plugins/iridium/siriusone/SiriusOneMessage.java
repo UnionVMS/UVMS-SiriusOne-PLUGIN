@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
  **/
 public class SiriusOneMessage {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SiriusOneMessage.class);
+
     private long deviceId;
     private long msgSequenseNo;
     private BoolType normalReport;
@@ -40,7 +42,6 @@ public class SiriusOneMessage {
     private byte[] msg;
     private String strMsg;
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
-    final static Logger LOG = LoggerFactory.getLogger(SiriusOneMessage.class);
 
     public enum BoolType {
 

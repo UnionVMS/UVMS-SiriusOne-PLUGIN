@@ -9,35 +9,24 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.plugins.iridium.service;
+package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- **/
-@Startup
-@Singleton
-public class FileHandlerBean {
-
-    private static final Logger LOG = LoggerFactory.getLogger(FileHandlerBean.class);
-
-    public Properties getPropertiesFromFile(String fileName) {
-        Properties props = new Properties();
-        try {
-            InputStream inputStream = FileHandlerBean.class.getClassLoader().getResourceAsStream(fileName);
-            props.load(inputStream);
-        } catch (IOException e) {
-            LOG.debug("Properties file failed to load");
-        }
-        return props;
+public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
+ 
+    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+ 
+    @Override
+    public String marshal(LocalDateTime dateTime) {
+        return dateTime.format(dateFormat);
     }
-
+ 
+    @Override
+    public LocalDateTime unmarshal(String dateTime) {
+        return LocalDateTime.parse(dateTime, dateFormat);
+    }
+ 
 }

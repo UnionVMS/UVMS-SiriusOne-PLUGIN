@@ -11,13 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.service;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.CommandType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.CommandTypeType;
@@ -31,16 +28,13 @@ import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PollType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.SettingListType;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 
-/**
- **/
-@LocalBean
-@Stateless
+@RequestScoped
 public class PluginService {
 
-    @EJB
+    @Inject
     StartupBean startupBean;
 
-    final static Logger LOG = LoggerFactory.getLogger(PluginService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginService.class);
 
     /**
      * TODO implement

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="false" scanPeriod="60 seconds" debug="false">
     
-    <property resource="siriusone.properties" />
+    <property resource="plugin.properties" />
     
     <contextName>${application.name}</contextName>
     

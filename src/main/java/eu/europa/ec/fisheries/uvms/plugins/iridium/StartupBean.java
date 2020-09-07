@@ -12,21 +12,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.plugins.iridium;
 
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Timer;
+import javax.inject.Inject;
 import javax.jms.JMSException;
-
-import eu.europa.ec.fisheries.schema.exchange.registry.v1.ExchangeRegistryMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.schema.exchange.registry.v1.ExchangeRegistryMethod;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.SettingListType;
@@ -40,9 +37,9 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.service.FileHandlerBean;
 @Startup
 public class StartupBean extends PluginDataHolder {
 
-    final static Logger LOG = LoggerFactory.getLogger(StartupBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StartupBean.class);
 
-    private final static int MAX_NUMBER_OF_TRIES = 20;
+    private static final int MAX_NUMBER_OF_TRIES = 20;
     private boolean isRegistered = false;
     private boolean isEnabled = false;
     private boolean waitingForResponse = false;
@@ -52,10 +49,10 @@ public class StartupBean extends PluginDataHolder {
     private String APPLICATION_NAME = "";
     private String RESPONSE_TOPIC_NAME = "";
 
-    @EJB
+    @Inject
     PluginMessageProducer messageProducer;
 
-    @EJB
+    @Inject
     FileHandlerBean fileHandler;
 
     private CapabilityListType capabilities;
@@ -71,20 +68,20 @@ public class StartupBean extends PluginDataHolder {
         APPLICATION_NAME = getPLuginApplicationProperty("application.name");
         RESPONSE_TOPIC_NAME = getPLuginApplicationProperty("application.responseTopicName");
 
-        //Theese can be loaded in any order
+        //These can be loaded in any order
         super.setPluginProperties(fileHandler.getPropertiesFromFile(PluginDataHolder.PROPERTIES));
         super.setPluginCapabilities(fileHandler.getPropertiesFromFile(PluginDataHolder.CAPABILITIES));
 
-        ServiceMapper.mapToMapFromProperties(super.getSettings(), super.getPluginProperties(), getRegisterClassName());
+        ServiceMapper.mapToMapFromProperties(super.getSettings(), super.getPluginProperties(), getRegisterClassName() + "." + getApplicationName());
         ServiceMapper.mapToMapFromProperties(super.getCapabilities(), super.getPluginCapabilities(), null);
 
         capabilities = ServiceMapper.getCapabilitiesListTypeFromMap(super.getCapabilities());
         settingList = ServiceMapper.getSettingsListTypeFromMap(super.getSettings());
 
         serviceType = ServiceMapper.getServiceType(
-                getRegisterClassName() + "." + getApplicaionName(),
-                getApplicaionName(),
-                "A good description for the plugin",
+                getRegisterClassName() + "." + getApplicationName(),
+                getApplicationName(),
+                "SiriusOne plugin for Polaris data reports",
                 PluginType.SATELLITE_RECEIVER,
                 getPluginResponseSubscriptionName(),
                 "IRIDIUM");
@@ -124,7 +121,7 @@ public class StartupBean extends PluginDataHolder {
         setWaitingForResponse(true);
         try {
             String registerServiceRequest = ExchangeModuleRequestMapper.createRegisterServiceRequest(serviceType, capabilities, settingList);
-            String correlationId = messageProducer.sendEventBusMessage(registerServiceRequest, ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE, ExchangeRegistryMethod.REGISTER_SERVICE.value());
+            messageProducer.sendEventBusMessage(registerServiceRequest, ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE, ExchangeRegistryMethod.REGISTER_SERVICE.value());
         } catch (JMSException | RuntimeException e) {
             LOG.error("Failed to send registration message to {}", ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE);
             setWaitingForResponse(false);
@@ -136,7 +133,7 @@ public class StartupBean extends PluginDataHolder {
         LOG.info("Unregistering from Exchange Module");
         try {
             String unregisterServiceRequest = ExchangeModuleRequestMapper.createUnregisterServiceRequest(serviceType);
-            String correlationId = messageProducer.sendEventBusMessage(unregisterServiceRequest, ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE, ExchangeRegistryMethod.UNREGISTER_SERVICE.value());
+            messageProducer.sendEventBusMessage(unregisterServiceRequest, ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE, ExchangeRegistryMethod.UNREGISTER_SERVICE.value());
         } catch (JMSException | RuntimeException e) {
             LOG.error("Failed to send unregistration message to {}", ExchangeModelConstants.EXCHANGE_REGISTER_SERVICE);
         }
@@ -152,7 +149,7 @@ public class StartupBean extends PluginDataHolder {
     }
 
     public String getPluginResponseSubscriptionName() {
-        return getRegisterClassName() + "." + getApplicaionName() + RESPONSE_TOPIC_NAME;
+        return getRegisterClassName() + "." + getApplicationName() + RESPONSE_TOPIC_NAME;
     }
 
     public String getResponseTopicMessageName() {
@@ -163,16 +160,16 @@ public class StartupBean extends PluginDataHolder {
         return REGISTER_CLASS_NAME;
     }
 
-    public String getApplicaionName() {
+    public String getApplicationName() {
         return APPLICATION_NAME;
     }
 
     public String getSetting(String key) {
         try {
-            LOG.debug("Trying to get setting {} ", REGISTER_CLASS_NAME + "." + key);
-            return super.getSettings().get(REGISTER_CLASS_NAME + "." + key);
+            LOG.debug("Trying to get setting {} ", REGISTER_CLASS_NAME + "." + APPLICATION_NAME + "." + key);
+            return super.getSettings().get(REGISTER_CLASS_NAME + "." + APPLICATION_NAME + "." + key);
         } catch (Exception e) {
-            LOG.error("Failed to getSetting for key: " + key, REGISTER_CLASS_NAME);
+            LOG.error("Failed to getSetting for key: " + key, REGISTER_CLASS_NAME + "." + APPLICATION_NAME);
             return null;
         }
     }

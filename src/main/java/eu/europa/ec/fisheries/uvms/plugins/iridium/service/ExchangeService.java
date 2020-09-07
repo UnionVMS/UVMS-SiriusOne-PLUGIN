@@ -11,47 +11,28 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.service;
 
-import java.util.UUID;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import java.time.Instant;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.jms.JMSException;
-
 import eu.europa.ec.fisheries.schema.exchange.module.v1.ExchangeModuleMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.schema.exchange.movement.v1.SetReportMovementType;
+import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
-import eu.europa.ec.fisheries.uvms.plugins.iridium.constants.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.producer.PluginMessageProducer;
 
-/**
- **/
-@LocalBean
-@Stateless
+@RequestScoped
 public class ExchangeService {
 
-    final static Logger LOG = LoggerFactory.getLogger(ExchangeService.class);
-
-    @EJB
+    @Inject
     StartupBean startupBean;
 
-    @EJB
+    @Inject
     PluginMessageProducer producer;
 
-    public void sendMovementReportToExchange(SetReportMovementType reportType) {
-        try {
-            String text = ExchangeModuleRequestMapper.createSetMovementReportRequest(reportType, "SIRIUSONE");
-            String messageId = producer.sendModuleMessage(text, ModuleQueue.EXCHANGE, ExchangeModuleMethod.SET_MOVEMENT_REPORT.value());
-            startupBean.getCachedMovement().put(messageId, reportType);
-        } catch (RuntimeException e) {
-            LOG.error("Couldn't map movement to setreportmovementtype");
-        } catch (JMSException e) {
-            LOG.error("couldn't send movement");
-            startupBean.getCachedMovement().put(UUID.randomUUID().toString(), reportType);
-        }
+    public void sendMovementReportToExchange(SetReportMovementType reportType) throws JMSException {
+        String text = ExchangeModuleRequestMapper.createSetMovementReportRequest(reportType, "SIRIUSONE", null, Instant.now(), PluginType.SATELLITE_RECEIVER, "SIRIUSONE", null);
+        producer.sendMessageToExchange(text, ExchangeModuleMethod.SET_MOVEMENT_REPORT.value());
     }
 }

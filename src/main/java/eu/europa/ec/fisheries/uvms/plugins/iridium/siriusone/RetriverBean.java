@@ -11,38 +11,26 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone;
 
-import java.util.concurrent.Future;
-
-import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javax.inject.Inject;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 
-/***/
 @Singleton
 @Startup
 public class RetriverBean {
-    final static Logger LOG = LoggerFactory.getLogger(RetriverBean.class);
-    private Future connectFuture = null;
 
-    @EJB
-    DownLoadService downloadService;
+    @Inject
+    DownloadService downloadService;
 
-    @EJB
+    @Inject
     StartupBean startupBean;
 
     @Schedule(minute = "*/1", hour = "*", persistent = false)
     public void download() {
-        if (startupBean.isIsEnabled() &&
-                (connectFuture == null || (connectFuture != null && connectFuture.isDone()))) {
-            connectFuture = downloadService.download();
-        } else {
-            LOG.debug("Future is not null and busy");
+        if (startupBean.isIsEnabled()) {
+            downloadService.download();
         }
     }
 

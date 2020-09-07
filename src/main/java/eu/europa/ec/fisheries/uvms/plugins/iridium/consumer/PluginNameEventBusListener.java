@@ -11,17 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.consumer;
 
-import javax.ejb.EJB;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.exchange.plugin.v1.PingRequest;
@@ -39,19 +35,18 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.service.PluginService;
 
 public class PluginNameEventBusListener implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(PluginNameEventBusListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginNameEventBusListener.class);
 
-    @EJB
+    @Inject
     PluginService service;
 
-    @EJB
+    @Inject
     PluginMessageProducer messageProducer;
 
-    @EJB
+    @Inject
     StartupBean startup;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message inMessage) {
 
         LOG.debug("Eventbus listener for siriusone (MessageConstants.PLUGIN_SERVICE_CLASS_NAME): {}", startup.getRegisterClassName());
@@ -61,7 +56,6 @@ public class PluginNameEventBusListener implements MessageListener {
         try {
 
             PluginBaseRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, PluginBaseRequest.class);
-            LOG.debug("test");
             String responseMessage = null;
 
             switch (request.getMethod()) {
@@ -69,31 +63,31 @@ public class PluginNameEventBusListener implements MessageListener {
                     SetConfigRequest setConfigRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, SetConfigRequest.class);
                     AcknowledgeTypeType setConfig = service.setConfig(setConfigRequest.getConfigurations());
                     AcknowledgeType setConfigAck = ExchangePluginResponseMapper.mapToAcknowledgeType(textMessage.getJMSMessageID(), setConfig);
-                    responseMessage = ExchangePluginResponseMapper.mapToSetConfigResponse(startup.getRegisterClassName() + "." + startup.getApplicaionName(), setConfigAck);
+                    responseMessage = ExchangePluginResponseMapper.mapToSetConfigResponse(startup.getRegisterClassName() + "." + startup.getApplicationName(), setConfigAck);
                     break;
                 case SET_COMMAND:
                     SetCommandRequest setCommandRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, SetCommandRequest.class);
                     AcknowledgeTypeType setCommand = service.setCommand(setCommandRequest.getCommand());
                     AcknowledgeType setCommandAck = ExchangePluginResponseMapper.mapToAcknowledgeType(textMessage.getJMSMessageID(), setCommand);
-                    responseMessage = ExchangePluginResponseMapper.mapToSetCommandResponse(startup.getRegisterClassName() + "." + startup.getApplicaionName(), setCommandAck);
+                    responseMessage = ExchangePluginResponseMapper.mapToSetCommandResponse(startup.getRegisterClassName() + "." + startup.getApplicationName(), setCommandAck);
                     break;
                 case SET_REPORT:
                     SetReportRequest setReportRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, SetReportRequest.class);
                     AcknowledgeTypeType setReport = service.setReport(setReportRequest.getReport());
                     AcknowledgeType setReportAck = ExchangePluginResponseMapper.mapToAcknowledgeType(textMessage.getJMSMessageID(), setReport);
-                    responseMessage = ExchangePluginResponseMapper.mapToSetReportResponse(startup.getRegisterClassName() + "." + startup.getApplicaionName(), setReportAck);
+                    responseMessage = ExchangePluginResponseMapper.mapToSetReportResponse(startup.getRegisterClassName() + "." + startup.getApplicationName(), setReportAck);
                     break;
                 case START:
                     StartRequest startRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, StartRequest.class);
                     AcknowledgeTypeType start = service.start();
                     AcknowledgeType startAck = ExchangePluginResponseMapper.mapToAcknowledgeType(textMessage.getJMSMessageID(), start);
-                    responseMessage = ExchangePluginResponseMapper.mapToStartResponse(startup.getRegisterClassName() + "." + startup.getApplicaionName(), startAck);
+                    responseMessage = ExchangePluginResponseMapper.mapToStartResponse(startup.getRegisterClassName() + "." + startup.getApplicationName(), startAck);
                     break;
                 case STOP:
                     StopRequest stopRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, StopRequest.class);
                     AcknowledgeTypeType stop = service.stop();
                     AcknowledgeType stopAck = ExchangePluginResponseMapper.mapToAcknowledgeType(textMessage.getJMSMessageID(), stop);
-                    responseMessage = ExchangePluginResponseMapper.mapToStopResponse(startup.getRegisterClassName() + "." + startup.getApplicaionName(), stopAck);
+                    responseMessage = ExchangePluginResponseMapper.mapToStopResponse(startup.getRegisterClassName() + "." + startup.getApplicationName(), stopAck);
                     break;
                 case PING:
                     PingRequest pingRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, PingRequest.class);

@@ -11,17 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.plugins.iridium.consumer;
 
-import javax.ejb.EJB;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.schema.exchange.registry.v1.ExchangeRegistryBaseRequest;
 import eu.europa.ec.fisheries.schema.exchange.registry.v1.RegisterServiceResponse;
 import eu.europa.ec.fisheries.schema.exchange.registry.v1.UnregisterServiceResponse;
@@ -30,13 +26,12 @@ import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
 
 public class PluginAckEventBusListener implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(PluginAckEventBusListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginAckEventBusListener.class);
 
-    @EJB
+    @Inject
     StartupBean startupService;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message inMessage) {
 
         LOG.info("Eventbus listener for siriusone at selector: {} got a message", startupService.getPluginResponseSubscriptionName());
