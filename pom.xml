@@ -51,12 +51,6 @@
             <artifactId>uvms-commons-message</artifactId>
             <version>${uvms.common.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <scm>
