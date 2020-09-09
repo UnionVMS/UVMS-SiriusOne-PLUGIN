@@ -72,7 +72,7 @@ public class DownloadService {
     }
 
     private void getMessages() throws IOException, MessagingException, JAXBException {
-        Message[] mails = getMails(startUp.getSetting("MAILHOST"), startUp.getSetting("MAILPORT"), startUp.getSetting("USERNAME"), startUp.getSetting("PSW"));
+        Message[] mails = getMails(startUp.getSetting("MAILHOST"), startUp.getSetting("MAILPORT"), startUp.getSetting("USERNAME"), startUp.getSetting("PSW"), startUp.getSetting("SUBFOLDER"));
         LOG.debug("Unseen messages: {}", mails.length);
 
         for (Message message : mails) {
@@ -100,7 +100,7 @@ public class DownloadService {
         }
     }
     
-    private Message[] getMails(String server, String port, String user, String password) throws MessagingException {
+    private Message[] getMails(String server, String port, String user, String password, String inboxSubfolder) throws MessagingException {
         Properties props = System.getProperties();
 
         props.setProperty("mail.imap.port", port);
@@ -109,7 +109,11 @@ public class DownloadService {
 
         Store store = session.getStore("imap");
         store.connect(server, user, password);
-        Folder inbox = store.getFolder("INBOX").getFolder("REPORTS");
+        Folder inbox = store.getFolder("INBOX");
+
+        if (inboxSubfolder != null) {
+            inbox = inbox.getFolder(inboxSubfolder);
+        }
 
         // search for all "unseen" messages
         Flags seen = new Flags(Flags.Flag.SEEN);
