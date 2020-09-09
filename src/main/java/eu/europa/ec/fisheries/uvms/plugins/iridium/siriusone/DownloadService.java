@@ -216,7 +216,7 @@ public class DownloadService {
         mp.setLongitude(position.getLongitude());
         movement.setPosition(mp);
 
-        movement.setPositionTime(new Date(position.getGps().toEpochSecond(ZoneOffset.UTC)));
+        movement.setPositionTime(Date.from(position.getGps().toInstant(ZoneOffset.UTC)));
 
         movement.setReportedCourse(position.getCourse());
 
