@@ -73,7 +73,7 @@ public class DownloadService {
 
     private void getMessages() throws IOException, MessagingException, JAXBException {
         Message[] mails = getMails(startUp.getSetting("MAILHOST"), startUp.getSetting("MAILPORT"), startUp.getSetting("USERNAME"), startUp.getSetting("PSW"), startUp.getSetting("SUBFOLDER"));
-        LOG.debug("Unseen messages: {}", mails.length);
+        LOG.info("New messages: {}", mails.length);
 
         for (Message message : mails) {
             Multipart multipart = (Multipart) message.getContent();
