@@ -224,7 +224,7 @@ public class DownloadService {
 
         movement.setSource(MovementSourceType.IRIDIUM);
 
-        movement.setLesReportTime(new Date(position.getTimestamp().toEpochSecond(ZoneOffset.UTC)));
+        movement.setLesReportTime(Date.from(position.getTimestamp().toInstant(ZoneOffset.UTC)));
         
         SetReportMovementType reportType = new SetReportMovementType();
         reportType.setMovement(movement);
