@@ -4,7 +4,7 @@
     <parent>
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
-        <version>3.3</version>
+        <version>3.4</version>
     </parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.plugins.iridium</groupId>
@@ -25,9 +25,6 @@
         <application.name>${project.artifactId}</application.name> 
         <application.responseTopicName>PLUGIN_RESPONSE</application.responseTopicName> 
         <application.groupid>${project.groupId}</application.groupid> 
-        <application.version>${project.version}</application.version>
-        <application.logfile>/app/logs/${project.artifactId}/${project.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.artifactId}/${project.artifactId}-error.log</application.error.logfile>
 
         <application.connection.factory>jms:/ConnectionFactory</application.connection.factory>
         <application.destination.jndi>jms:/jms/topic/EventBus</application.destination.jndi>
@@ -69,6 +66,11 @@
                             <filtering>true</filtering>
                         </resource>
                     </webResources>
+                    <archive>
+                        <manifestEntries>
+                            <Logging-Profile>siriusone</Logging-Profile>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
