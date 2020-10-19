@@ -18,7 +18,7 @@
 
         <uvms.common.version>4.1.8</uvms.common.version>
         <audit.model.version>4.0.4</audit.model.version>
-        <exchange.model.version>5.3.10-UVMS</exchange.model.version>
+        <exchange.model.version>5.3.11-UVMS</exchange.model.version>
 
         <project.scm.id>github</project.scm.id>
         
