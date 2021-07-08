@@ -27,14 +27,18 @@ import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.EmailType;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PollType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.SettingListType;
 import eu.europa.ec.fisheries.uvms.plugins.iridium.StartupBean;
+import eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone.PollService;
 
 @RequestScoped
 public class PluginService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PluginService.class);
+
     @Inject
     StartupBean startupBean;
 
-    private static final Logger LOG = LoggerFactory.getLogger(PluginService.class);
+    @Inject
+    PollService pollService;
 
     /**
      * TODO implement
